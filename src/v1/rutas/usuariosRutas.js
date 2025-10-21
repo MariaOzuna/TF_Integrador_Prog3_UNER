@@ -20,11 +20,23 @@ router.get('/:usuario_id', cache('3 minutes'), usuariosControlador.buscarUsuario
 //POST para agregar un nuevo usuario
 router.post('/', 
     [
-        check('nombre', 'Falta el nombre del usuario').trim().notEmpty(),
-        check('apellido', 'Falta el apellido del usuario').trim().notEmpty(),
-        check('nombre_usuario', 'Falta el nombre de usuario o el email es inválido').trim().notEmpty().isEmail(), // trim para eliminar espacios, notEmpty para que no esté vacio, isEmail chequea que sea email correcto
-        check('contrasenia', 'Falta la contraseña').trim().notEmpty(),
-        check('tipo_usuario', 'Falta el tipo del usuario, debe poner un numero del 1 al 3').trim().notEmpty().isNumeric(),
+        check('nombre', 'Falta el nombre del usuario')
+        .trim()
+        .notEmpty(),
+        check('apellido', 'Falta el apellido del usuario')
+        .trim()
+        .notEmpty(),
+        check('nombre_usuario', 'Falta el nombre de usuario o el email es inválido')
+        .trim()
+        .notEmpty()
+        .isEmail(), // trim para eliminar espacios, notEmpty para que no esté vacio, isEmail chequea que sea email correcto
+        check('contrasenia', 'Falta la contraseña')
+        .trim()
+        .notEmpty(),
+        check('tipo_usuario', 'Falta el tipo del usuario')
+        .trim()
+        .notEmpty()
+        .isInt({min: 1, max: 3}).withMessage('El valor debe ser un número entre el 1 y el 3'),
         validarCampos
     ],
     usuariosControlador.agregarUsuario);

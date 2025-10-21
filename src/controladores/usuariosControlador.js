@@ -2,6 +2,9 @@ import { escape } from "mysql2";
 import UsuariosServicio from "../servicios/usuariosServicio.js";
 import { errorCatch } from "./funciones.js";
 import { usuarioNoEncontrado } from "./funciones.js";
+import apicache from 'apicache';
+
+//const cache = apicache.middleware;
 
 export default class UsuariosControlador{
     constructor(){
@@ -54,6 +57,7 @@ export default class UsuariosControlador{
                 usuario: usuarioEditado,
                 mensaje: "usuario modificado con éxito"
             });
+            apicache.clear();
         } catch (error) {
             errorCatch('PUT', error, res);
         }
@@ -75,6 +79,7 @@ export default class UsuariosControlador{
                 mensaje: "Se eliminó al siguiente usuario usuario eliminado.",
                 usuario: dato
             })
+            apicache.clear();
         } catch (error) {
             errorCatch('DELETE', error, res);
         }
@@ -91,6 +96,7 @@ export default class UsuariosControlador{
                 mensaje: `usuario agregado con éxito. Su id es: ${agregado.insertId}`,
                 usuario: agregado
             });
+            apicache.clear();
             
         } catch (error) {
             errorCatch('POST', error, res);
