@@ -1,0 +1,21 @@
+{
+  "name": "app-reservas-grupoj",
+  "version": "1.0.0",
+  "description": "aplicacion de reservas - casa de cumpleaños - grupo j",
+  "main": "src/reservas.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "des": "node --watch src/reservas.js"
+  },
+  "author": "vaca cardoso facundo",
+  "license": "ISC",
+  "dependencies": {
+    "apicache": "^1.6.3",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "handlebars": "^4.7.8",
+    "mysql2": "^3.15.1",
+    "nodemailer": "^7.0.6"
+  }
+}
