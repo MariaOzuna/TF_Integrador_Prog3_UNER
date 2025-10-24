@@ -4,7 +4,12 @@ import { errorCatch } from "./funciones.js";
 import { usuarioNoEncontrado } from "./funciones.js";
 import apicache from 'apicache';
 
-//const cache = apicache.middleware;
+//para notificar mail
+import nodemailer from 'nodemailer';
+import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
+import path, { dirname } from 'path';
+import handlebars from 'handlebars';
 
 export default class UsuariosControlador{
     constructor(){
@@ -70,7 +75,7 @@ export default class UsuariosControlador{
             const dato = await this.usuariosServicio.buscarUsuario(usuario_id);
             const eliminado = await this.usuariosServicio.eliminarUsuario(usuario_id);
 
-            if(!eliminado){
+            if(!dato){
                 //hacer funcion para esto
                 return usuarioNoEncontrado(res);
             }
@@ -97,9 +102,59 @@ export default class UsuariosControlador{
                 usuario: agregado
             });
             apicache.clear();
+            this.notificacionCreacion(nombre, apellido, nombre_usuario, tipo_usuario); //se envia notificacion al administrador
             
         } catch (error) {
             errorCatch('POST', error, res);
         }
+    }
+
+    notificacionCreacion = async (nombre, apellido, nombre_usuario, tipo_usuario) => {
+        //envio de notificacion al administrador con posibilidad de eliminar creacion de usuario
+        
+        process.loadEnvFile();
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename); //obtener ruta del archivo
+        const plantilla = path.join(__dirname, '..', 'utiles', 'handlebars', 'plantilla.hbs');
+
+        // leo la plantilla handlebars, compilo y le paso los datos que llegaron
+        const archivoHbs = await readFile(plantilla, 'utf-8');
+        const template = handlebars.compile(archivoHbs);
+
+        var html = template(
+            {   nombre: nombre,
+                apellido: apellido,
+                nombre_usuario: nombre_usuario,
+                tipo_usuario: tipo_usuario
+            }
+        );
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.USERCORREO,
+                pass: process.env.PASSCORREO,
+            },
+        });
+
+        const opciones = {
+            to: nombre_usuario, //deberia ir dirigido al administrador
+            subject: 'Notificacion nuevo usuario creado',
+            html: html
+        }
+
+        transporter.sendMail(opciones, (error, info) => {
+            // envío el correo electronico - revisar esta res.json
+            if(error){
+                res.json({
+                    'ok': false, 
+                    'mensaje': 'Error al enviar el correo.'
+                });
+            }
+            res.json({
+                'ok': true,
+                'mensaje': 'Correo enviado!'
+            });
+        });
     }
 }

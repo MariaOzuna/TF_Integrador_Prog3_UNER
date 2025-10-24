@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Usuario</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(180, 213, 241);
+        }
+        .contenedor{
+            max-width: 700px;
+            margin: 25px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+        }
+        header{
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        header h1 {
+            margin: 0;
+            color: #03912e;
+        }
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px auto;
+            font-size: 16px;
+            color: #333;
+        }
+        h3 {
+            margin: 0;
+            color: black;
+        }
+        button{
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #f44336;
+        }
+        button:hover{
+            background-color: #da190b;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <header>
+            <h1>Notificación de usuario creado</h1>
+        </header>
+
+        <h2>Se creó el siguiente usuario</h2>
+        <ul>
+            <li><strong>Nombre:</strong> {{ nombre }}</li>
+            <li><strong>Apellido:</strong> {{ apellido }}</li>
+            <li><strong>Mail o usuario:</strong> {{ nombre_usuario }}</li>
+            <li><strong>Tipo de usuario:</strong> {{ tipo_usuario }}</li>
+        </ul>
+
+        <h3> Si no fuiste vos, clickeá el botón para eliminarlo</h3>
+        
+        <button class="btn-eliminar" id="id-boton">ELIMINAR USUARIO -no funciona-</button>
+        
+        <footer>
+            &copy; reserva de cumpleaños - Administración
+        </footer>
+    </div>
+
+    <script>
+        
+    </script>
+</body>
+</html>
