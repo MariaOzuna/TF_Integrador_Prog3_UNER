@@ -16,3 +16,11 @@ export const usuarioNoEncontrado = (res) => {
         mensaje: 'Usuario no encontrado en la base de datos.'
     });
 }
+
+export const reservaNoEncontrada = (res) => {
+    // funcion para reutilizar cuando no se encuentra una reserva, respuesta con 404
+    res.status(404).json({
+        estado: false,
+        mensaje: 'Reserva no encontrada en la base de datos.'
+    });
+}
