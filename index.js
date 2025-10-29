@@ -26,6 +26,8 @@ async function testConnection() {
 
 testConnection();
 
+const turnosRoutes = require('./src/routes/turnos.routes');
+app.use('/api/turnos', turnosRoutes);
 
 const usuariosRoutes = require('./src/routes/usuarios.routes');
 app.use('/api/usuarios', usuariosRoutes);
