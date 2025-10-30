@@ -1,4 +1,4 @@
-import ReservasServicio from "../servicios/reservasServicio";
+import ReservasServicio from "../servicios/reservasServicio.js";
 import { errorCatch } from "./funciones.js";
 import apicache from 'apicache';
 

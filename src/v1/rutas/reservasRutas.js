@@ -9,7 +9,7 @@ const reservasControlador = new ReservasControlador();
 const router = express.Router();
 
 //GET de todas las reservas
-router.get('/', cache('2 minutes'), reservasControlador.buscarTodasReservas);
+router.get('/', cache('2 minutes'), reservasControlador.buscarTodasLasReservas);
 
 //GET para buscar una reserva por su id
 router.get('/:reserva_id', cache('3 minutes'), reservasControlador.buscarReserva);
