@@ -1,5 +1,7 @@
+import { escape } from "mysql2";
 import ReservasServicio from "../servicios/reservasServicio.js";
 import { errorCatch } from "./funciones.js";
+import { reservaNoEncontrada } from "./funciones.js";
 import apicache from 'apicache';
 
 export default class ReservasControlador{
@@ -41,15 +43,22 @@ export default class ReservasControlador{
     //POST para agregar reserva
     agregarReserva = async (req, res) => {
         try {
-            const {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total} = req.body;
-            const valores = [fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total];
+            const {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total, servicios} = req.body;
+            const reserva = {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total, servicios};
             
-            const [agregado] = await this.reservasServicio.agregarReserva(valores);
+            const nuevaReserva = await this.reservasServicio.agregarReserva(reserva);
 
-            res.status(201).json({ 
+            if(!nuevaReserva) {
+                //MEJORAR ESTO
+                return res.status(404).json({
+                    estado: false,
+                    mensaje: 'reserva no creada'
+                })
+            }
+            res.json({ 
                 estado: true,
-                mensaje: `Reserva agregada con éxito. Su id es: ${agregado.insertId}`,
-                reserva_id: agregado.insertId
+                mensaje: `Reserva agregada con éxito`,
+                reserva: nuevaReserva
             });
             apicache.clear();
             
