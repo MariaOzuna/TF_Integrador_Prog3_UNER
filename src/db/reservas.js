@@ -20,12 +20,19 @@ export default class Reservas {
     }
 
     //Add: Agrega nueva reserva
-    agregarReserva = async (valores) => {
-        const sql = `INSERT INTO reservas (fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total) 
-                     VALUES(?,?,?,?,?,?,?,?)`;
-        const [nuevaReserva] = await conexion.execute(sql, valores);
-        return nuevaReserva;
+    agregarReserva = async (reserva) => {
+        const {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total} = reserva;
+        const sql = `INSERT INTO reservas (fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total) VALUES(?,?,?,?,?,?,?,?)`;
+        
+        const [resultado] = await conexion.execute(sql, [fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total]);
+        if(resultado.affectedRows === 0){
+            return null;
+        }
+
+        return this.buscarReserva(resultado.insertId);
     }
+
+    //datos para notificacion despues...
 
     //Edit: modifica una reserva
     editarReserva = async (reserva_id, valores) => {

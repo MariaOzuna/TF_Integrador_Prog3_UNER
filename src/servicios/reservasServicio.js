@@ -1,8 +1,11 @@
 import Reservas from "../db/reservas.js";
+import ReservasServicios from "../db/reservas_servicios.js";
+// TODO: import NotificacionesServicios from "./notificacionesServicios.js"
 
 export default class ReservasServicio{
     constructor(){
         this.reservas = new Reservas();
+        this.reservas_servicios = new ReservasServicios();
     }
 
     buscarTodasLasReservas = () => {
@@ -13,8 +16,26 @@ export default class ReservasServicio{
         return this.reservas.buscarReserva(reserva_id);
     }
 
-    agregarReserva = (valores) => {
-        return this.reservas.agregarReserva(valores);
+    agregarReserva = async (reserva) => {
+        const {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total, servicios} = reserva; //desestructuro para usar los datos
+        const nuevaReserva = {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total}; //nueva reserva sin los servicios
+
+        //agrego la reserva
+        const resultado = await this.reservas.agregarReserva(nuevaReserva);
+
+        if(!resultado) {
+            return null;
+        }
+
+        //agregar servicios a la reserva
+        await this.reservas_servicios.agregarServicios(resultado.reserva_id, servicios); 
+
+        // BUSCO LOS DATOS PARA LA NOTIFICACION, LEYENDO DESDE LA BASE DE DATOS (DATOS CREADOS) -->completar y cambiar comentario
+
+        // ENVIO NOTIFICACIO -->completar y cambiar comentario
+
+        //retorno reserva creada
+        return this.reservas.buscarReserva(resultado.reserva_id);
     }
 
     editarReserva = async (reserva_id, valores) => {
