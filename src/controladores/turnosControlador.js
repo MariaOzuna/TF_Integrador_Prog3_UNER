@@ -41,8 +41,9 @@ export default class TurnosControlador {
 
   crearTurno = async (req, res) => {
     try {
-      const { descripcion } = req.body;
-      const turno = { descripcion };
+      // CAMBIAMOS ESTO: para que coincida con los campos nuevos
+      const { orden, hora_desde, hora_hasta } = req.body;
+      const turno = { orden, hora_desde, hora_hasta };
       const nuevoTurno = await this.turnosServicio.crearTurno(turno);
 
       if (!nuevoTurno) {

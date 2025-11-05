@@ -9,7 +9,7 @@ export default class TurnosServicio{
         return this.turnos.buscarTodosTurnos();
     }
 
-    buscarPorId = (turno_id) => {
+    buscarTurno = (turno_id) => {
         return this.turnos.buscarPorId(turno_id);
     }
 
