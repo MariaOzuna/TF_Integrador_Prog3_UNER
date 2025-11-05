@@ -24,3 +24,17 @@ export const reservaNoEncontrada = (res) => {
         mensaje: 'Reserva no encontrada en la base de datos.'
     });
 }
+export const salonNoEncontrado = (res) => {
+    res.status(404).json({
+        estado: false,
+        mensaje: 'Salón no encontrado en la base de datos.'
+    });
+}
+
+export const turnoNoEncontrado = (res) => {
+    // funcion para reutilizar cuando no se encuentra un turno, respuesta con 404
+    res.status(404).json({
+        estado: false,
+        mensaje: 'Turno no encontrado en la base de datos.'
+    });
+}
