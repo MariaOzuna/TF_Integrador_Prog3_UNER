@@ -10,6 +10,9 @@ const turnosControlador = new TurnosControlador();
 
 const router = express.Router(); 
 
+// Expresión regular para validar HH:MM o HH:MM:SS
+const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
+
 //GET de todos los turnos
 router.get('/', cache('2 minutes'), turnosControlador.buscarTodosTurnos); 
 
@@ -21,10 +24,15 @@ router.post('/',
     [
         check('orden', 'Falta el orden o no es un entero')
             .trim().notEmpty().isInt(),
-        check('hora_desde', 'Falta la hora_desde (formato HH:MM o HH:MM:SS)')
-            .trim().notEmpty().isTime(),
-        check('hora_hasta', 'Falta la hora_hasta (formato HH:MM o HH:MM:SS)')
-            .trim().notEmpty().isTime(),
+            
+        // CAMBIAMOS .isISO8601().toDate() POR .matches(timeRegex)
+        check('hora_desde', 'El formato de hora_desde debe ser HH:MM o HH:MM:SS')
+            .trim().notEmpty().matches(timeRegex),
+            
+        // CAMBIAMOS .isISO8601().toDate() POR .matches(timeRegex)
+        check('hora_hasta', 'El formato de hora_hasta debe ser HH:MM o HH:MM:SS')
+            .trim().notEmpty().matches(timeRegex),
+            
         validarCampos
     ],
     turnosControlador.crearTurno);
@@ -32,13 +40,17 @@ router.post('/',
 //PUT para editar un turno por su id
 router.put('/:turno_id', 
     [
-        // Hacemos las validaciones opcionales para el PUT
         check('orden', 'El orden debe ser un entero')
             .optional().trim().isInt(),
-        check('hora_desde', 'La hora_desde es inválida')
-            .optional().trim().isTime(),
-        check('hora_hasta', 'La hora_hasta es inválida')
-            .optional().trim().isTime(),
+
+        // CAMBIAMOS .isISO8601().toDate() POR .matches(timeRegex)
+        check('hora_desde', 'El formato de hora_desde debe ser HH:MM o HH:MM:SS')
+            .optional().trim().matches(timeRegex),
+
+        // CAMBIAMOS .isISO8601().toDate() POR .matches(timeRegex)
+        check('hora_hasta', 'El formato de hora_hasta debe ser HH:MM o HH:MM:SS')
+            .optional().trim().matches(timeRegex),
+            
         validarCampos
     ],
     turnosControlador.modificarTurno);
