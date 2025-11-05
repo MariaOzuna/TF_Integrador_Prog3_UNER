@@ -20,9 +20,9 @@ export default class Turnos {
     }
 
     crearTurno = async (turno) =>{
-        const { descripcion } = turno;
-        const sql = `INSERT INTO turnos (descripcion) VALUES(?);`
-        const [nuevoTurno] = await conexion.execute(sql, [descripcion]);
+        const {  } = turno;
+        const sql = `INSERT INTO turnos (orden, hora_desde, hora_hasta) VALUES(?,?,?);`
+        const [nuevoTurno] = await conexion.execute(sql, [orden, hora_desde, hora_hasta]);
 
         if (nuevoTurno.affectedRows === 0) {
             return null;
