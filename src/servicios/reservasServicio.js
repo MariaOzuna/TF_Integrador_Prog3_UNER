@@ -2,11 +2,17 @@ import Reservas from "../db/reservas.js";
 import ReservasServicios from "../db/reservas_servicios.js";
 // TODO: import NotificacionesServicios from "./notificacionesServicios.js"
 
+// Nuevo servicios de informes
+import InformesServicio from "./informesServicio.js";
+
 export default class ReservasServicio{
     constructor(){
         this.reservas = new Reservas();
         this.reservas_servicios = new ReservasServicios();
+        // Instancia de nuevo servicio
+        this.informes = new InformesServicio();
     }
+
 
     buscarTodasLasReservas = () => {
         return this.reservas.buscarTodasLasReservas();
@@ -52,5 +58,35 @@ export default class ReservasServicio{
             return null;
         }
         return this.reservas.eliminarReserva(reserva_id);
+    }
+
+
+// Llamar a la BD
+buscarDatosReporte = () => {
+        return this.reservas.buscarDatosReporte();
+}
+
+generarInforme = async (formato) => { 
+        // Busca los datos
+        const datosReporte = await this.buscarDatosReporte();
+        
+        // Verifica si hay datos
+        if (!datosReporte || datosReporte.length === 0) {
+            return null; // El controlador dirá, No hay datos
+        }
+
+        if (formato === 'pdf') {
+            const pdf = await this.informes.informeReservasPdf(datosReporte);
+            return {
+                file: pdf,
+                headers: {
+                    'Content-Type': 'application/pdf',
+                    'Content-Disposition': 'attachment; filename="reporte_reservas.pdf"'
+                }
+            };
+        }
+        
+        // Si el formato no es pdf, devuelve null
+        return null;
     }
 }
