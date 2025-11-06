@@ -1,6 +1,6 @@
 import Reservas from "../db/reservas.js";
 import ReservasServicios from "../db/reservas_servicios.js";
-// TODO: import NotificacionesServicios from "./notificacionesServicios.js"
+import NotificacionesServicios from "./notificacionesServicio.js"
 
 // Nuevo servicios de informes
 import InformesServicio from "./informesServicio.js";
@@ -11,6 +11,7 @@ export default class ReservasServicio{
         this.reservas_servicios = new ReservasServicios();
         // Instancia de nuevo servicio
         this.informes = new InformesServicio();
+        this.notificaciones_servicios = new NotificacionesServicios();
     }
 
 
@@ -36,10 +37,14 @@ export default class ReservasServicio{
         //agregar servicios a la reserva
         await this.reservas_servicios.agregarServicios(resultado.reserva_id, servicios); 
 
-        // BUSCO LOS DATOS PARA LA NOTIFICACION, LEYENDO DESDE LA BASE DE DATOS (DATOS CREADOS) -->completar y cambiar comentario
+        try{
+            const datosParaNotificacion = await this.reservas.datosParaNotificacion(resultado.reserva_id);
+            await this.notificaciones_servicios.enviarCorreo(datosParaNotificacion);
 
-        // ENVIO NOTIFICACIO -->completar y cambiar comentario
-
+        } catch(notificacionError) {
+            console.log("No se pudo enviar el correo");
+        }
+        
         //retorno reserva creada
         return this.reservas.buscarReserva(resultado.reserva_id);
     }
