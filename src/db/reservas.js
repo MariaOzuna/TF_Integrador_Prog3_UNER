@@ -63,4 +63,15 @@ export default class Reservas {
         const [reservaEliminada] = await conexion.execute(sql, [reserva_id]);
         return reservaEliminada;
     }
+
+    datosParaNotificacion = async (reserva_id) => {
+        const sql = `CALL obtenerDatosNotificacion(?)`;
+
+        const [reserva] = await conexion.execute(sql, [reserva_id]);
+        if(reserva.length === 0){
+            return null;
+        }
+
+        return reserva;
+    }
 }

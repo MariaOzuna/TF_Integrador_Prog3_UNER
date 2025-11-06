@@ -115,7 +115,7 @@ export default class UsuariosControlador{
         process.loadEnvFile();
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename); //obtener ruta del archivo
-        const plantilla = path.join(__dirname, '..', 'utiles', 'handlebars', 'plantilla.hbs');
+        const plantilla = path.join(__dirname, '..', 'utiles', 'handlebars', 'plantillaUsuarios.hbs');
 
         // leo la plantilla handlebars, compilo y le paso los datos que llegaron
         const archivoHbs = await readFile(plantilla, 'utf-8');
