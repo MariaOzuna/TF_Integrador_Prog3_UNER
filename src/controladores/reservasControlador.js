@@ -12,7 +12,7 @@ export default class ReservasControlador{
     //GET de todas las reservas
     buscarTodasLasReservas = async (req, res) => {
         try{
-            const datos = await this.reservasServicio.buscarTodasLasReservas();
+            const datos = await this.reservasServicio.buscarTodasLasReservas(req.user);
             res.json({
                 estado: true,
                 reservas: datos
