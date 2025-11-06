@@ -1,4 +1,3 @@
-//acá no definimos clases
 import express from 'express';
 import { check } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
@@ -11,12 +10,109 @@ const usuariosControlador = new UsuariosControlador();
 
 const router = express.Router(); //esto da express para poder definir las rutas
 
+/**
+ * @swagger
+ * tags:
+ *   - name: Usuarios
+ *     description: Endpoints para la gestión de usuarios.
+ */
+
+/**
+ * @swagger
+ * /usuarios:
+ *   get:
+ *     summary: Obtiene todos los usuarios activos
+ *     tags: [Usuarios]
+ *     responses:
+ *       '200':
+ *         description: Lista de usuarios obtenida con éxito.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                   example: true
+ *                 usuarios:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Usuario'
+ *       '500':
+ *         $ref: '#/components/responses/ErrorServidor'
+ */
 //GET de todos los usuarios --> la ruta es usuarios/
 router.get('/', cache('2 minutes'), usuariosControlador.buscarTodosUsuarios); //usar apicache
 
+
+/**
+ * @swagger
+ * /usuarios/{usuario_id}:
+ *   get:
+ *     summary: Obtiene un usuario por su ID
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: usuario_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID numérico del usuario a buscar.
+ *     responses:
+ *       '200':
+ *         description: Datos del usuario.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                   example: true
+ *                 usuario:
+ *                   $ref: '#/components/schemas/Usuario'
+ *       '404':
+ *         $ref: '#/components/responses/ErrorNoEncontrado'
+ *       '500':
+ *         $ref: '#/components/responses/ErrorServidor'
+ */
 //GET para buscar un usuario por su id
 router.get('/:usuario_id', cache('3 minutes'), usuariosControlador.buscarUsuario); //usar apicache
 
+
+/**
+ * @swagger
+ * /usuarios:
+ *   post:
+ *     summary: Agrega un nuevo usuario
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NuevoUsuario'
+ *     responses:
+ *       '201':
+ *         description: Usuario creado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                   example: true
+ *                 mensaje:
+ *                   type: string
+ *                   example: "Usuario agregado con éxito. Su id es: 123"
+ *                 usuario:
+ *                   $ref: '#/components/schemas/Usuario'
+ *       '400':
+ *         $ref: '#/components/responses/ErrorValidacion'
+ *       '500':
+ *         $ref: '#/components/responses/ErrorServidor'
+ */
 //POST para agregar un nuevo usuario
 router.post('/', 
     [
@@ -41,9 +137,86 @@ router.post('/',
     ],
     usuariosControlador.agregarUsuario);
 
+
+/**
+ * @swagger
+ * /usuarios/{usuario_id}:
+ *   put:
+ *     summary: Edita un usuario existente
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: usuario_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID numérico del usuario a editar.
+ *     requestBody:
+ *       required: true
+ *       description: Campos a modificar (parcial).
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NuevoUsuario'
+ *     responses:
+ *       '200':
+ *         description: Usuario modificado con éxito.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                   example: true
+ *                 mensaje:
+ *                   type: string
+ *                   example: "Usuario modificado con éxito"
+ *                 usuario:
+ *                   $ref: '#/components/schemas/Usuario'
+ *       '404':
+ *         $ref: '#/components/responses/ErrorNoEncontrado'
+ *       '500':
+ *         $ref: '#/components/responses/ErrorServidor'
+ */
 //PUT para editar un usuario por su id
 router.put('/:usuario_id', usuariosControlador.editarUsuario);
 
+
+/**
+ * @swagger
+ * /usuarios/{usuario_id}:
+ *   delete:
+ *     summary: Elimina (lógicamente) un usuario por su ID
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: usuario_id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID numérico del usuario a eliminar.
+ *     responses:
+ *       '200':
+ *         description: Usuario eliminado lógicamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                   example: true
+ *                 mensaje:
+ *                   type: string
+ *                   example: "Usuario eliminado con éxito."
+ *                 usuario:
+ *                   $ref: '#/components/schemas/Usuario'
+ *       '404':
+ *         $ref: '#/components/responses/ErrorNoEncontrado'
+ *       '500':
+ *         $ref: '#/components/responses/ErrorServidor'
+ */
 //DELETE para el eliminado lógico de un usuario por su id
 router.delete('/:usuario_id', usuariosControlador.eliminarUsuario);
 
