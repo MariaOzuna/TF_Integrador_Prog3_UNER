@@ -14,9 +14,12 @@ export default class ReservasServicio{
         this.notificaciones_servicios = new NotificacionesServicios();
     }
 
-
-    buscarTodasLasReservas = () => {
-        return this.reservas.buscarTodasLasReservas();
+    buscarTodasLasReservas = (usuario) => {
+       if(usuario.tipo_usuario < 3){
+            return this.reservas.buscarTodasLasReservas();
+        }else{
+            return this.reservas.buscarPropias(usuario.usuario_id);
+        }
     }
 
     buscarReserva = (reserva_id) => {

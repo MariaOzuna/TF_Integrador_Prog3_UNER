@@ -36,7 +36,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Rutas api
 app.use('/api/v1/usuarios', v1UsuariosRutas); //cuando haya una consulta a usuarios la ruta que se va a usar es v1UsuariosRutas
 app.use('/api/v1/servicios', v1ServiciosRutas);//creamos la ruta servicios
-app.use('/api/v1/reservas', v1ReservasRutas);
+app.use('/api/v1/reservas', passport.authenticate('jwt', { session: false }), v1ReservasRutas);
 app.use('/api/v1/salones', v1SalonesRutas);
 app.use('/api/v1/turnos', v1TurnosRutas);
 app.use('/api/v1/auth', v1AuthRouter); // AUTENTICACIÓN     
