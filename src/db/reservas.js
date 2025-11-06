@@ -55,18 +55,13 @@ export default class Reservas {
     return this.buscarReserva(resultado.insertId);
   };
 
-  //datos para notificacion despues...
-
-  //Edit: modifica una reserva
-  editarReserva = async (reserva_id, valores) => {
-    const clavesParaEditar = Object.keys(valores);
-    const valoresParaEditar = Object.values(valores);
-    const setValores = clavesParaEditar
-      .map((clave) => `${clave} = ?`)
-      .join(", ");
-    const parametros = [...valoresParaEditar, reserva_id];
-
-    const sql = `UPDATE reservas
+    //Edit: modifica una reserva
+    editarReserva = async (reserva_id, valores) => {
+        const clavesParaEditar = Object.keys(valores);
+        const valoresParaEditar = Object.values(valores);
+        const setValores = clavesParaEditar.map((clave) => `${clave} = ?`).join(', ');
+        const parametros = [...valoresParaEditar, reserva_id];
+        const sql = `UPDATE reservas
                         SET ${setValores}
                         WHERE reserva_id = ?`;
 
@@ -75,21 +70,24 @@ export default class Reservas {
     if (resultado.affectedRows === 0) {
       return null;
     }
-    // retornamos la reserva actualizada
-    return this.buscarReserva(reserva_id);
-  };
-
-  //Delere: Eliminado lógico de reserva
-  eliminarReserva = async (reserva_id) => {
-    const sql = `UPDATE reservas 
+    
+    //Delere: Eliminado lógico de reserva
+    eliminarReserva = async (reserva_id) => {
+        const sql = `UPDATE reservas 
                         SET activo = 0
                         WHERE reserva_id = ?`;
     const [reservaEliminada] = await conexion.execute(sql, [reserva_id]);
     return reservaEliminada;
   };
 
-  datosParaNotificacion = async (reserva_id) => {
-    const sql = `CALL obtenerDatosNotificacion(?)`;
+    buscarDatosReporte = async () => {
+        const sql = 'CALL sp_reporte_reservas_detalle()'; 
+        const [rows] = await conexion.execute(sql);
+        return rows[0]; 
+    }
+
+    datosParaNotificacion = async (reserva_id) => {
+        const sql = `CALL obtenerDatosNotificacion(?)`;
 
     const [reserva] = await conexion.execute(sql, [reserva_id]);
     if (reserva.length === 0) {

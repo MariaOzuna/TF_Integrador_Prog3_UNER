@@ -6,14 +6,13 @@ import morgan from 'morgan';
 import fs from 'fs';
 
 import { estrategia, validacion} from './config/passport.js';
-
-
 import { router as v1UsuariosRutas } from './v1/rutas/usuariosRutas.js'; //importo rutas
 import { router as v1ServiciosRutas} from './v1/rutas/serviciosRutas.js'
 import { router as v1ReservasRutas } from './v1/rutas/reservasRutas.js';
 import { router as v1SalonesRutas } from './v1/rutas/salonesRutas.js';
 import { router as v1TurnosRutas } from './v1/rutas/turnosRutas.js';
 import { router as v1AuthRouter} from './v1/rutas/authRoutes.js';
+import { router as v1EstadisticasRutas } from './v1/rutas/estadisticasRutas.js';
 
 const app = express();
 
@@ -41,7 +40,7 @@ app.use('/api/v1/reservas', passport.authenticate('jwt', { session: false }), v1
 app.use('/api/v1/salones', v1SalonesRutas);
 app.use('/api/v1/turnos', v1TurnosRutas);
 app.use('/api/v1/auth', v1AuthRouter); // AUTENTICACIÓN     
-
+app.use('/api/v1/estadisticas', v1EstadisticasRutas);
 
 process.loadEnvFile();
 app.listen(process.env.PUERTO, () => {
