@@ -5,6 +5,14 @@ export default class UsuariosServicio{
         this.usuarios = new Usuarios(); //instancio la clase usuarios de db
     }
 
+    buscar = (nombre_usuario, contrasenia) => {
+        return this.usuarios.buscar(nombre_usuario, contrasenia);
+    }
+
+    buscarPorId = (usuario_id) => {
+        return this.usuarios.buscarPorId(usuario_id);
+    }
+
     buscarTodosUsuarios = () => {
         //GET de todos los usuarios
         //defino este metodo para que sea usado por el controlador
