@@ -50,31 +50,31 @@ router.get('/', cache('2 minutes'), autorizarUsuarios([1,2,3]), reservasControla
 /**
  * @swagger
  * /reservas/informe:
- * get:
- * summary: Genera un reporte de reservas en PDF
- * tags: [Reservas]
- * parameters:
- * - in: query
- * name: formato
- * schema:
- * type: string
- * enum: [pdf]
- * required: true
- * description: Formato del reporte (solo 'pdf' soportado).
- * responses:
- * '200':
- * description: Archivo PDF del reporte.
- * content:
- * application/pdf:
- * schema:
- * type: string
- * format: binary
- * '400':
- * $ref: '#/components/responses/ErrorValidacion'
- * '404':
- * $ref: '#/components/responses/ErrorNoEncontrado'
- * '500':
- * $ref: '#/components/responses/ErrorServidor'
+ *  get:
+ *    summary: Genera un reporte de reservas en PDF
+ *    tags: [Reservas]
+ *    parameters:
+ *      - in: query
+ *        name: formato
+ *        schema:
+ *          type: string
+ *        enum: [pdf]
+ *        required: true
+ *        description: Formato del reporte (solo 'pdf' soportado).
+ *    responses:
+ *      '200':
+ *          description: Archivo PDF del reporte.
+ *          content:
+ *            application/pdf:
+ *              schema:
+ *                type: string
+ *                format: binary
+ *    '400':
+ *      $ref: '#/components/responses/ErrorValidacion'
+ *    '404':
+ *      $ref: '#/components/responses/ErrorNoEncontrado'
+ *    '500':
+ *      $ref: '#/components/responses/ErrorServidor'
  */
 // GET para el informe (Solo Admin)
 router.get('/informe', autorizarUsuarios([1]), reservasControlador.informe);
