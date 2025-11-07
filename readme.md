@@ -72,3 +72,69 @@ JWT_SECRET=tu_palabra_secreta_para_jwt
 # Configuración de Nodemailer (ej. para Gmail)
 EMAIL_USER=tu_correo@gmail.com
 EMAIL_PASS=tu_contraseña_de_aplicacion_de_google
+
+### 4. Procedimientos almacenados en la base de datos
+Procedimiento obtenerDatosNotificacion (parametro p_reserva_id tipo INT):
+BEGIN
+	SELECT 
+		r.fecha_reserva as fecha,
+    	s.titulo as salon,
+    	t.orden as turno,
+        u.nombre_usuario as correoCliente
+	FROM 
+    	reservas as r
+	INNER JOIN
+		salones as s ON s.salon_id = r.salon_id
+	INNER JOIN
+		turnos as t ON t.turno_id = r.turno_id
+    INNER JOIN
+		usuarios as u ON u.usuario_id = r.usuario_id
+	WHERE
+		r.activo = 1 AND r.reserva_id = p_reserva_id;
+
+	SELECT u.nombre_usuario AS correoAdmin
+		FROM
+    		usuarios AS u
+    	WHERE 
+    		u.tipo_usuario = 1 AND u.activo = 1;
+END
+
+Procedimiento sp_estadisticas_salon:
+BEGIN
+	SELECT
+    	s.titulo AS salon_titulo,
+        COUNT(r.reserva_id) AS cantidad_reservas,
+        SUM(r.importe_total) AS total_facturado
+    FROM reservas AS r
+    JOIN salones AS s ON r.salon_id = s.salon_id
+    WHERE r.activo = 1
+    GROUP BY s.titulo
+    ORDER BY total_facturado DESC;
+END
+
+Procedimiento sp_reporte_reservas_detalle:
+BEGIN
+    SELECT
+        r.reserva_id,
+        r.fecha_reserva,
+        r.importe_total,
+        r.tematica,
+        s.titulo AS salon_titulo,
+        CONCAT(t.hora_desde, ' - ', t.hora_hasta) AS turno_horario,
+        CONCAT(u.nombre, ' ', u.apellido) AS cliente_nombre,
+        u.nombre_usuario AS cliente_email,
+        u.celular AS cliente_celular,
+
+        (SELECT GROUP_CONCAT(serv.descripcion SEPARATOR ', ') 
+         FROM reservas_servicios rs
+         JOIN servicios serv ON rs.servicio_id = serv.servicio_id
+         WHERE rs.reserva_id = r.reserva_id) AS servicios_contratados
+
+    FROM reservas r
+    JOIN salones s ON r.salon_id = s.salon_id
+    JOIN turnos t ON r.turno_id = t.turno_id
+    JOIN usuarios u ON r.usuario_id = u.usuario_id
+    WHERE r.activo = 1
+    GROUP BY r.reserva_id
+    ORDER BY r.fecha_reserva;
+END
