@@ -5,6 +5,7 @@ import { router as v1ReservasRutas } from './v1/rutas/reservasRutas.js';
 import { router as v1SalonesRutas } from './v1/rutas/salonesRutas.js';
 import { router as v1TurnosRutas } from './v1/rutas/turnosRutas.js';
 import { router as v1EstadisticasRutas } from './v1/rutas/estadisticasRutas.js';
+import { router as v1DashboardRutas } from './v1/rutas/dashboardRutas.js';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use('/api/v1/reservas', v1ReservasRutas);
 app.use('/api/v1/salones', v1SalonesRutas);
 app.use('/api/v1/turnos', v1TurnosRutas);
 app.use('/api/v1/estadisticas', v1EstadisticasRutas);
+app.use('/dashboard', v1DashboardRutas);
 
 process.loadEnvFile();
 app.listen(process.env.PUERTO, () => {

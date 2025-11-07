@@ -62,6 +62,7 @@ export default class Reservas {
         return reservaEliminada;
     }
 
+    // Busca datos
     buscarDatosReporte = async () => {
         const sql = 'CALL sp_reporte_reservas_detalle()'; 
         const [rows] = await conexion.execute(sql);

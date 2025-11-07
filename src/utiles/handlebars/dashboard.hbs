@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard de Estadísticas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #03912e; 
+            color: white;
+        }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard de Estadísticas</h1>
+    <h3>Total Facturado y Reservas por Salón</h3>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre del Salón</th>
+                <th>Cantidad de Reservas</th>
+                <th>Total Facturado ($)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each estadisticas}}
+            <tr>
+                <td>{{this.salon_titulo}}</td>
+                <td>{{this.cantidad_reservas}}</td>
+                <td>{{this.total_facturado}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+</body>
+</html>
