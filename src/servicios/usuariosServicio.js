@@ -13,10 +13,11 @@ export default class UsuariosServicio{
         return this.usuarios.buscarPorId(usuario_id);
     }
 
-    buscarTodosUsuarios = () => {
+    buscarTodosUsuarios = (rolSolicitante) => {
         //GET de todos los usuarios
         //defino este metodo para que sea usado por el controlador
-        return this.usuarios.buscarTodosUsuarios();
+        //pasamos el rol del solicitante a la capa de BD
+        return this.usuarios.buscarTodosUsuarios(rolSolicitante);
     }
 
     buscarUsuario = (usuario_id) => {

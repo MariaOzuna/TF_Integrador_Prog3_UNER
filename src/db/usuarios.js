@@ -19,9 +19,18 @@ export default class Usuarios {
     return result[0];
   };
 
-  buscarTodosUsuarios = async () => {
+  buscarTodosUsuarios = async (rolSolicitante) => {
     //GET de todos los usuarios
-    const sql = "SELECT * FROM usuarios WHERE activo = 1";
+    let sql = "";
+
+    if (rolSolicitante === 1) {
+        // Rol 1 (Admin) ve a TODOS los usuarios activos
+        sql = "SELECT * FROM usuarios WHERE activo = 1";
+    } else {
+        // Rol 2 (Empleado) ve SOLO a los Clientes (Rol 3) activos
+        sql = "SELECT * FROM usuarios WHERE activo = 1 AND tipo_usuario = 3";
+    }
+
     const usuarios = await conexion.execute(sql);
     return usuarios; //se lo retorna al servicio
   };
