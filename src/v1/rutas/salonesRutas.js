@@ -3,7 +3,7 @@ import { check } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js'; 
 import SalonesControlador from '../../controladores/salonesControlador.js';
 import apicache from 'apicache';
-
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 let cache = apicache.middleware;
 const salonesControlador = new SalonesControlador();
@@ -42,7 +42,8 @@ const router = express.Router();
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-router.get('/', cache('2 minutes'), salonesControlador.buscarTodos);
+// Clientes(3), Empleados(2) y Admin(1) pueden ver
+router.get('/', cache('2 minutes'), autorizarUsuarios([1, 2, 3]),salonesControlador.buscarTodos);
 
 
 /**
@@ -76,7 +77,8 @@ router.get('/', cache('2 minutes'), salonesControlador.buscarTodos);
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-router.get('/:salon_id', cache('3 minutes'), salonesControlador.buscarPorId);
+// Clientes(3), Empleados(2) y Admin(1) pueden ver
+router.get('/:salon_id', cache('3 minutes'),autorizarUsuarios([1, 2, 3]), salonesControlador.buscarPorId);
 
 
 /**
@@ -112,7 +114,9 @@ router.get('/:salon_id', cache('3 minutes'), salonesControlador.buscarPorId);
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
+// Solo Empleados(2) y Admin(1)
 router.post('/', 
+    autorizarUsuarios([1, 2]), // AUTORIZACIÓN
     [
         check('titulo', 'Falta el título del salón')
             .trim().notEmpty(),
@@ -169,8 +173,8 @@ router.post('/',
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-// modifica por id
-router.put('/:salon_id', salonesControlador.modificar);
+// modifica por id - Solo Empleados(2) y Admin(1)
+router.put('/:salon_id', autorizarUsuarios([1, 2]), salonesControlador.modificar);
 
 
 /**
@@ -207,7 +211,7 @@ router.put('/:salon_id', salonesControlador.modificar);
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-// elimina por id
-router.delete('/:salon_id', salonesControlador.eliminar);
+// elimina por id - Solo Empleados(2) y Admin(1)
+router.delete('/:salon_id',autorizarUsuarios([1, 2]), salonesControlador.eliminar);
 
 export { router };

@@ -3,6 +3,7 @@ import { check } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
 import TurnosControlador from '../../controladores/turnosControlador.js';
 import apicache from 'apicache';
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 let cache = apicache.middleware;
 
@@ -45,8 +46,8 @@ const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//GET de todos los turnos
-router.get('/', cache('2 minutes'), turnosControlador.buscarTodosTurnos); 
+//GET de todos los turnos - Clientes(3), Empleados(2) y Admin(1) pueden ver
+router.get('/', cache('2 minutes'), autorizarUsuarios([1, 2, 3]), turnosControlador.buscarTodosTurnos); 
 
 
 /**
@@ -80,8 +81,8 @@ router.get('/', cache('2 minutes'), turnosControlador.buscarTodosTurnos);
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//GET para buscar un turno por su id
-router.get('/:turno_id', cache('3 minutes'), turnosControlador.buscarTurno); 
+//GET para buscar un turno por su id - Clientes(3), Empleados(2) y Admin(1) pueden ver
+router.get('/:turno_id', cache('3 minutes'), autorizarUsuarios([1, 2, 3]), turnosControlador.buscarTurno); 
 
 
 /**
@@ -117,8 +118,9 @@ router.get('/:turno_id', cache('3 minutes'), turnosControlador.buscarTurno);
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//POST para agregar un nuevo turno
+//POST para agregar un nuevo turno - Solo Empleados(2) y Admin(1)
 router.post('/', 
+    autorizarUsuarios([1, 2]), // AUTORIZACIÓN
     [
         check('orden', 'Falta el orden o no es un entero')
             .trim().notEmpty().isInt(),
@@ -175,8 +177,9 @@ router.post('/',
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//PUT para editar un turno por su id
+//PUT para editar un turno por su id - Solo Empleados(2) y Admin(1)
 router.put('/:turno_id', 
+    autorizarUsuarios([1, 2]), // AUTORIZACIÓN
     [
         check('orden', 'El orden debe ser un entero')
             .optional().trim().isInt(),
@@ -227,6 +230,7 @@ router.put('/:turno_id',
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //DELETE para el eliminado lógico de un turno por su id
-router.delete('/:turno_id', turnosControlador.eliminarTurno);
+// Solo Empleados(2) y Admin(1)
+router.delete('/:turno_id', autorizarUsuarios([1, 2]), turnosControlador.eliminarTurno);
 
 export { router };
