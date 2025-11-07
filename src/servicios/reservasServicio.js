@@ -1,15 +1,25 @@
 import Reservas from "../db/reservas.js";
 import ReservasServicios from "../db/reservas_servicios.js";
-// TODO: import NotificacionesServicios from "./notificacionesServicios.js"
+import NotificacionesServicios from "./notificacionesServicio.js"
+
+// Nuevo servicios de informes
+import InformesServicio from "./informesServicio.js";
 
 export default class ReservasServicio{
     constructor(){
         this.reservas = new Reservas();
         this.reservas_servicios = new ReservasServicios();
+        // Instancia de nuevo servicio
+        this.informes = new InformesServicio();
+        this.notificaciones_servicios = new NotificacionesServicios();
     }
 
-    buscarTodasLasReservas = () => {
-        return this.reservas.buscarTodasLasReservas();
+    buscarTodasLasReservas = (usuario) => {
+       if(usuario.tipo_usuario < 3){
+            return this.reservas.buscarTodasLasReservas();
+        }else{
+            return this.reservas.buscarPropias(usuario.usuario_id);
+        }
     }
 
     buscarReserva = (reserva_id) => {
@@ -30,10 +40,14 @@ export default class ReservasServicio{
         //agregar servicios a la reserva
         await this.reservas_servicios.agregarServicios(resultado.reserva_id, servicios); 
 
-        // BUSCO LOS DATOS PARA LA NOTIFICACION, LEYENDO DESDE LA BASE DE DATOS (DATOS CREADOS) -->completar y cambiar comentario
+        try{
+            const datosParaNotificacion = await this.reservas.datosParaNotificacion(resultado.reserva_id);
+            await this.notificaciones_servicios.enviarCorreo(datosParaNotificacion);
 
-        // ENVIO NOTIFICACIO -->completar y cambiar comentario
-
+        } catch(notificacionError) {
+            console.log("No se pudo enviar el correo");
+        }
+        
         //retorno reserva creada
         return this.reservas.buscarReserva(resultado.reserva_id);
     }
@@ -52,5 +66,35 @@ export default class ReservasServicio{
             return null;
         }
         return this.reservas.eliminarReserva(reserva_id);
+    }
+
+
+// Llamar a la BD
+buscarDatosReporte = () => {
+        return this.reservas.buscarDatosReporte();
+}
+
+generarInforme = async (formato) => { 
+        // Busca los datos
+        const datosReporte = await this.buscarDatosReporte();
+        
+        // Verifica si hay datos
+        if (!datosReporte || datosReporte.length === 0) {
+            return null; // El controlador dirá, No hay datos
+        }
+
+        if (formato === 'pdf') {
+            const pdf = await this.informes.informeReservasPdf(datosReporte);
+            return {
+                file: pdf,
+                headers: {
+                    'Content-Type': 'application/pdf',
+                    'Content-Disposition': 'attachment; filename="reporte_reservas.pdf"'
+                }
+            };
+        }
+        
+        // Si el formato no es pdf, devuelve null
+        return null;
     }
 }

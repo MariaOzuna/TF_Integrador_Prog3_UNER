@@ -40,7 +40,6 @@ export default class Reservas {
         const valoresParaEditar = Object.values(valores);
         const setValores = clavesParaEditar.map((clave) => `${clave} = ?`).join(', ');
         const parametros = [...valoresParaEditar, reserva_id];
-
         const sql = `UPDATE reservas
                         SET ${setValores}
                         WHERE reserva_id = ?`;
@@ -53,7 +52,6 @@ export default class Reservas {
         // retornamos la reserva actualizada
         return this.buscarReserva(reserva_id);
     }
-
     
     //Delere: Eliminado lógico de reserva
     eliminarReserva = async (reserva_id) => {
@@ -62,5 +60,22 @@ export default class Reservas {
                         WHERE reserva_id = ?`;
         const [reservaEliminada] = await conexion.execute(sql, [reserva_id]);
         return reservaEliminada;
+    }
+
+    buscarDatosReporte = async () => {
+        const sql = 'CALL sp_reporte_reservas_detalle()'; 
+        const [rows] = await conexion.execute(sql);
+        return rows[0]; 
+    }
+
+    datosParaNotificacion = async (reserva_id) => {
+        const sql = `CALL obtenerDatosNotificacion(?)`;
+
+        const [reserva] = await conexion.execute(sql, [reserva_id]);
+        if(reserva.length === 0){
+            return null;
+        }
+
+        return reserva;
     }
 }

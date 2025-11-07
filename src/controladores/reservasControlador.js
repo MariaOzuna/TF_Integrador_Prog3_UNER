@@ -12,7 +12,7 @@ export default class ReservasControlador{
     //GET de todas las reservas
     buscarTodasLasReservas = async (req, res) => {
         try{
-            const datos = await this.reservasServicio.buscarTodasLasReservas();
+            const datos = await this.reservasServicio.buscarTodasLasReservas(req.user);
             res.json({
                 estado: true,
                 reservas: datos
@@ -43,7 +43,8 @@ export default class ReservasControlador{
     //POST para agregar reserva
     agregarReserva = async (req, res) => {
         try {
-            const {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total, servicios} = req.body;
+            const {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero = null, tematica = null, importe_salon, importe_total, servicios} = req.body;
+            
             const reserva = {fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total, servicios};
             
             const nuevaReserva = await this.reservasServicio.agregarReserva(reserva);
@@ -108,6 +109,36 @@ export default class ReservasControlador{
         
         } catch (error) {
             errorCatch('DELETE', error, res);
+        }
+    }
+
+
+    // Informes
+    informe = async (req, res) => {
+        const formato = req.query.formato; 
+
+        if (formato !== 'pdf') {
+            return res.status(400).json({
+                estado: false,
+                mensaje: "Formato de informe no válido. Debe ser 'pdf'."
+            });
+        }
+        
+        try {
+            const reporte = await this.reservasServicio.generarInforme(formato);
+
+            if (!reporte || !reporte.file) {
+                return res.status(404).json({
+                    estado: false,
+                    mensaje: "No hay datos para generar el informe."
+                });
+            }
+            
+            res.set(reporte.headers);
+            res.send(reporte.file);
+
+        } catch (error) {
+            errorCatch('INFORME', error, res);
         }
     }
 }

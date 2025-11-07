@@ -1,8 +1,11 @@
 import express from 'express';
 import { check } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
+
 import ReservasControlador from '../../controladores/reservasControlador.js';
 import apicache from 'apicache';
+
 
 let cache = apicache.middleware;
 const reservasControlador = new ReservasControlador();
@@ -41,7 +44,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //GET de todas las reservas
-router.get('/', cache('2 minutes'), reservasControlador.buscarTodasLasReservas);
+router.get('/', cache('2 minutes'), autorizarUsuarios([1,2,3]), reservasControlador.buscarTodasLasReservas);
 
 
 /**
@@ -76,7 +79,7 @@ router.get('/', cache('2 minutes'), reservasControlador.buscarTodasLasReservas);
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //GET para buscar una reserva por su id
-router.get('/:reserva_id', cache('3 minutes'), reservasControlador.buscarReserva);
+router.get('/:reserva_id', cache('3 minutes'), autorizarUsuarios([1,2,3]), reservasControlador.buscarReserva);
 
 
 /**
@@ -113,7 +116,7 @@ router.get('/:reserva_id', cache('3 minutes'), reservasControlador.buscarReserva
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //POST para agregar una nueva reserva
-router.post('/', 
+router.post('/', autorizarUsuarios([1,3]),
     [
         check('fecha_reserva', 'Falta la fecha de la reserva o es inválida')
             .trim().notEmpty().isISO8601().toDate(),
@@ -179,7 +182,7 @@ router.post('/',
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //PUT para editar una reserva por su id
-router.put('/:reserva_id', 
+router.put('/:reserva_id', autorizarUsuarios([1]),
     [
         check('fecha_reserva', 'La fecha de la reserva es inválida')
             .optional().trim().isISO8601().toDate(),
@@ -233,6 +236,6 @@ router.put('/:reserva_id',
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //DELETE para eliminado lógico 
-router.delete('/:reserva_id', reservasControlador.eliminarReserva);
+router.delete('/:reserva_id', autorizarUsuarios([1]), reservasControlador.eliminarReserva);
 
 export { router };
