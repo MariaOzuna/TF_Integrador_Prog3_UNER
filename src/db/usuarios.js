@@ -47,19 +47,24 @@ export default class Usuarios {
   };
 
   editarUsuario = async (usuario_id, valores) => {
-    const clavesParaEditar = Object.keys(valores); //me quedo con las claves que mande el cliente
-    const valoresParaEditar = Object.values(valores); //me quedo con los valores que mande el cliente
-    const setValores = clavesParaEditar
-      .map((clave) => `${clave} = ?`)
-      .join(", "); //armo la consulta set en base a lo recibido
-    const parametros = [...valoresParaEditar, usuario_id];
+    const clavesParaEditar = Object.keys(valores);
+    const valoresParaEditar = Object.values(valores);
 
-    const sql = `UPDATE usuarios
-                        SET ${setValores}
-                        WHERE usuario_id = ?`;
+    // Modificar la consulta para aplicar SHA2 a la contraseña si está presente
+    const setValores = clavesParaEditar.map((clave) => {
+        if (clave === 'contrasenia') {
+            return `${clave} = SHA2(?, 256)`; // Aplicar SHA2 a la contraseña
+        } else {
+            return `${clave} = ?`;
+        }
+    }).join(", ");
+
+    const parametros = [...valoresParaEditar, usuario_id];
+    const sql = `UPDATE usuarios SET ${setValores} WHERE usuario_id = ?`;
+
     const [resultado] = await conexion.execute(sql, parametros);
     if (resultado.affectedRows === 0) {
-      return null;
+        return null;
     }
     return this.buscarUsuario(usuario_id);
   };
@@ -73,8 +78,10 @@ export default class Usuarios {
   };
 
   agregarUsuario = async (valores) => {
-    const sql = `INSERT INTO usuarios (nombre, apellido, nombre_usuario, contrasenia, tipo_usuario) VALUES(?,?,?,?,?);`;
+    const sql = `INSERT INTO usuarios (nombre, apellido, nombre_usuario, contrasenia, tipo_usuario)
+                 VALUES(?, ?, ?, SHA2(?, 256), ?);`;
     const nuevoUsuario = await conexion.execute(sql, valores);
     return nuevoUsuario;
   };
+
 }
