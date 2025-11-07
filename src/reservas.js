@@ -21,6 +21,8 @@ passport.use(estrategia);
 passport.use(validacion);
 app.use(passport.initialize());
 
+// Middleware de autenticación JWT
+const authJwt = passport.authenticate('jwt', { session: false });
 
 // morgan
 let log = fs.createWriteStream('./access.log', { flags: 'a' })
@@ -34,12 +36,15 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 // Rutas api
+// ruta de autenticación (pública)
+app.use('/api/v1/auth', v1AuthRouter);
+
+// rutas protegidas (requieren autenticación)
 app.use('/api/v1/usuarios', v1UsuariosRutas); //cuando haya una consulta a usuarios la ruta que se va a usar es v1UsuariosRutas
 app.use('/api/v1/servicios', v1ServiciosRutas);//creamos la ruta servicios
 app.use('/api/v1/reservas', passport.authenticate('jwt', { session: false }), v1ReservasRutas);
 app.use('/api/v1/salones', v1SalonesRutas);
 app.use('/api/v1/turnos', v1TurnosRutas);
-app.use('/api/v1/auth', v1AuthRouter); // AUTENTICACIÓN     
 app.use('/api/v1/estadisticas', v1EstadisticasRutas);
 
 process.loadEnvFile();

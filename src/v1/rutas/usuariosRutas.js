@@ -3,6 +3,7 @@ import { check } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
 import UsuariosControlador from '../../controladores/usuariosControlador.js';
 import apicache from 'apicache';
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 let cache = apicache.middleware;
 
@@ -41,8 +42,8 @@ const router = express.Router(); //esto da express para poder definir las rutas
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//GET de todos los usuarios --> la ruta es usuarios/
-router.get('/', cache('2 minutes'), usuariosControlador.buscarTodosUsuarios); //usar apicache
+//GET de todos los usuarios --> la ruta es usuarios/ - Empleados(2) y Admin(1)
+router.get('/', cache('2 minutes'), autorizarUsuarios([1, 2]), usuariosControlador.buscarTodosUsuarios); //usar apicache
 
 
 /**
@@ -76,8 +77,8 @@ router.get('/', cache('2 minutes'), usuariosControlador.buscarTodosUsuarios); //
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//GET para buscar un usuario por su id
-router.get('/:usuario_id', cache('3 minutes'), usuariosControlador.buscarUsuario); //usar apicache
+//GET para buscar un usuario por su id - Empleados(2) y Admin(1)
+router.get('/:usuario_id', cache('3 minutes'), autorizarUsuarios([1, 2]),usuariosControlador.buscarUsuario); //usar apicache
 
 
 /**
@@ -113,8 +114,9 @@ router.get('/:usuario_id', cache('3 minutes'), usuariosControlador.buscarUsuario
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//POST para agregar un nuevo usuario
+//POST para agregar un nuevo usuario - Solo Admin(1)
 router.post('/', 
+    autorizarUsuarios([1]), // AUTORIZACIÓN
     [
         check('nombre', 'Falta el nombre del usuario')
         .trim()
@@ -179,8 +181,8 @@ router.post('/',
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//PUT para editar un usuario por su id
-router.put('/:usuario_id', usuariosControlador.editarUsuario);
+//PUT para editar un usuario por su id - Solo Admin(1)
+router.put('/:usuario_id', autorizarUsuarios([1]), usuariosControlador.editarUsuario);
 
 
 /**
@@ -217,7 +219,7 @@ router.put('/:usuario_id', usuariosControlador.editarUsuario);
  *       '500':
  *         $ref: '#/components/responses/ErrorServidor'
  */
-//DELETE para el eliminado lógico de un usuario por su id
-router.delete('/:usuario_id', usuariosControlador.eliminarUsuario);
+//DELETE para el eliminado lógico de un usuario por su id - Solo Admin(1)
+router.delete('/:usuario_id', autorizarUsuarios([1]), usuariosControlador.eliminarUsuario);
 
 export { router };
