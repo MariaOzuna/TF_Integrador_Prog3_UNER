@@ -19,7 +19,10 @@ export default class UsuariosControlador{
     buscarTodosUsuarios = async (req, res) => {
         //GET de todos los usuarios
         try{
-            const [datos, campos] = await this.usuariosServicio.buscarTodosUsuarios();
+            const rolSolicitante = req.user.tipo_usuario;
+
+            const [datos, campos] = await this.usuariosServicio.buscarTodosUsuarios(rolSolicitante);
+            
             res.json({
                 estado: true,
                 usuarios: datos
