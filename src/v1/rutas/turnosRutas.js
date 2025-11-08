@@ -82,9 +82,9 @@ router.get('/', cache('2 minutes'), autorizarUsuarios([1, 2, 3]), turnosControla
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //GET para buscar un turno por su id - Clientes(3), Empleados(2) y Admin(1) pueden ver
-router.get('/:turno_id', cache('3 minutes'), autorizarUsuarios([1, 2, 3]), turnosControlador.buscarTurno); 
-
-
+router.get('/:turno_id', cache('3 minutes'), autorizarUsuarios([1, 2, 3]),
+ turnosControlador.buscarTurno); 
+//, 
 /**
  * @swagger
  * /turnos:
