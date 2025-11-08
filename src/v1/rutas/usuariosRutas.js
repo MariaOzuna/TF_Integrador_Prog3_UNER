@@ -78,7 +78,7 @@ router.get('/', cache('2 minutes'), autorizarUsuarios([1, 2]), usuariosControlad
  *         $ref: '#/components/responses/ErrorServidor'
  */
 //GET para buscar un usuario por su id - Empleados(2) y Admin(1)
-router.get('/:usuario_id', cache('3 minutes'), autorizarUsuarios([1, 2]),usuariosControlador.buscarUsuario); //usar apicache
+router.get('/:usuario_id', cache('3 minutes'), autorizarUsuarios([1, 2]),usuariosControlador.buscarUsuario);
 
 
 /**
@@ -116,7 +116,7 @@ router.get('/:usuario_id', cache('3 minutes'), autorizarUsuarios([1, 2]),usuario
  */
 //POST para agregar un nuevo usuario - Solo Admin(1)
 router.post('/', 
-    autorizarUsuarios([1]), // AUTORIZACIÓN
+    //autorizarUsuarios([1]), // AUTORIZACIÓN
     [
         check('nombre', 'Falta el nombre del usuario')
         .trim()

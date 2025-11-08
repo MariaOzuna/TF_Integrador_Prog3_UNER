@@ -79,7 +79,6 @@ export default class UsuariosControlador{
             const eliminado = await this.usuariosServicio.eliminarUsuario(usuario_id);
 
             if(!dato){
-                //hacer funcion para esto
                 return usuarioNoEncontrado(res);
             }
             res.json({
@@ -141,13 +140,13 @@ export default class UsuariosControlador{
         });
 
         const opciones = {
-            to: nombre_usuario, //deberia ir dirigido al administrador
+            to: nombre_usuario,
             subject: 'Notificacion nuevo usuario creado',
             html: html
         }
 
         transporter.sendMail(opciones, (error, info) => {
-            // envío el correo electronico - revisar esta res.json
+            // envío el correo electronico
             if(error){
                 res.json({
                     'ok': false, 

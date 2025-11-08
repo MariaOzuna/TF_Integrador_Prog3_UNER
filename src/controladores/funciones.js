@@ -1,4 +1,4 @@
-//este archivo es para armar funciones para no repetir codigo en carpeta controlador para usuariosControlador.js
+//este archivo es para armar funciones para no repetir codigo de los archivos en carpeta controlador
 
 export const errorCatch = (metodo, error, res) => {
     //funcion para reutilizar en catch en base al metodo específico

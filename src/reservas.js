@@ -40,13 +40,13 @@ const authJwt = passport.authenticate('jwt', { session: false });
 app.use('/api/v1/auth', v1AuthRouter);
 
 // rutas protegidas (requieren autenticación)
-app.use('/api/v1/usuarios', authJwt, v1UsuariosRutas);
+app.use('/api/v1/usuarios', v1UsuariosRutas);
 app.use('/api/v1/servicios', authJwt, v1ServiciosRutas);
 app.use('/api/v1/reservas', authJwt, v1ReservasRutas);
 app.use('/api/v1/salones', authJwt, v1SalonesRutas);
 app.use('/api/v1/turnos', authJwt, v1TurnosRutas);
 app.use('/api/v1/estadisticas', authJwt, v1EstadisticasRutas);
-app.use('/dashboard', authJwt, v1DashboardRutas);
+app.use('/dashboard', v1DashboardRutas); //no tiene authJwt para que puedan verla todos
 
 process.loadEnvFile();
 app.listen(process.env.PUERTO, () => {

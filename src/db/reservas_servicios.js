@@ -1,9 +1,7 @@
-//completar clase ReservasServicios
 import { conexion } from "./conexion.js";
 
 export default class ReservasServicios{
     //esta clase se corresponde con la tabla reservas_servicios (tiene reserva_servicio_id, reserva_id, servicio_id, importe)
-
     agregarServicios = async (reserva_id, servicios) => {
         try{
             await conexion.beginTransaction();
@@ -15,7 +13,7 @@ export default class ReservasServicios{
 
             await conexion.commit();
             
-            return true; //por ahora
+            return true;
         } catch (error){
             await conexion.rollback();
             console.log(`El error es: ${error}`);

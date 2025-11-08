@@ -31,9 +31,6 @@ export default class Reservas {
 
         return this.buscarReserva(resultado.insertId);
     }
-
-    //datos para notificacion despues...
-
     //Edit: modifica una reserva
     editarReserva = async (reserva_id, valores) => {
         const clavesParaEditar = Object.keys(valores);
@@ -53,7 +50,7 @@ export default class Reservas {
         return this.buscarReserva(reserva_id);
     }
     
-    //Delere: Eliminado lógico de reserva
+    //Delete: Eliminado lógico de reserva
     eliminarReserva = async (reserva_id) => {
         const sql = `UPDATE reservas 
                         SET activo = 0
@@ -76,7 +73,6 @@ export default class Reservas {
         if(reserva.length === 0){
             return null;
         }
-
         return reserva;
     }
 }

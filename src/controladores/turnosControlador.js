@@ -1,5 +1,5 @@
 import TurnosServicio from "../servicios/turnosServicio.js";
-import { errorCatch, turnoNoEncontrado } from "./funciones.js"; // Asegúrate de agregar turnoNoEncontrado
+import { errorCatch, turnoNoEncontrado } from "./funciones.js";
 import apicache from 'apicache';
 
 export default class TurnosControlador {
@@ -41,7 +41,6 @@ export default class TurnosControlador {
 
   crearTurno = async (req, res) => {
     try {
-      // CAMBIAMOS ESTO: para que coincida con los campos nuevos
       const { orden, hora_desde, hora_hasta } = req.body;
       const turno = { orden, hora_desde, hora_hasta };
       const nuevoTurno = await this.turnosServicio.crearTurno(turno);

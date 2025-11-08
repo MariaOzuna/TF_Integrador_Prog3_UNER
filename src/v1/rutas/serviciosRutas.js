@@ -81,7 +81,7 @@ router.get('/', cache('2 minutes'),autorizarUsuarios([1, 2, 3]), serviciosContro
  */
 //GET para buscar un servicio por su id
 // Clientes(3), Empleados(2) y Admin(1) pueden ver
-router.get('/:servicio_id', cache('3 minutes'),autorizarUsuarios([1, 2, 3]), serviciosControlador.buscarServicio); //usar apicache
+router.get('/:servicio_id', cache('3 minutes'),autorizarUsuarios([1, 2, 3]), serviciosControlador.buscarServicio);
 
 
 /**

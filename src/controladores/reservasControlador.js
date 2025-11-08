@@ -50,7 +50,6 @@ export default class ReservasControlador{
             const nuevaReserva = await this.reservasServicio.agregarReserva(reserva);
 
             if(!nuevaReserva) {
-                //MEJORAR ESTO
                 return res.status(404).json({
                     estado: false,
                     mensaje: 'reserva no creada'

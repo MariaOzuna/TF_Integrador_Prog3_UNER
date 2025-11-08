@@ -46,7 +46,7 @@ export default class NotificacionesServicio{
         }
 
         transporter.sendMail(opciones, (error, info) => {
-            // envío el correo electronico - revisar esta res.json
+            // envío el correo electronico
             if(error){
                 console.log(`Error enviado el correo`, error);       
                 return false;

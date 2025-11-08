@@ -2,7 +2,6 @@ import express from 'express';
 import EstadisticasControlador from '../../controladores/estadisticasControlador.js';
 import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
-// Hay que agregar la seguridad!!
 
 const router = express.Router();
 const estadisticasControlador = new EstadisticasControlador();

@@ -57,23 +57,22 @@ Tu archivo `.env` debería verse así:
 
 ```env
 # Configuración del Servidor
-PORT=3000
+PUERTO=3000
 
 # Configuración de la Base de Datos
-DB_HOST=localhost
-DB_USER=tu_usuario_mysql
-DB_PASSWORD=tu_contraseña_mysql
-DB_DATABASE=nombre_de_tu_base_de_datos
-DB_PORT=3306
+HOST='localhost'
+USER=tu_usuario_sql
+PASSWORD=tu_contraseña_mysql
+DATABASE=nombre_de_tu_base_de_datos
 
 # Secret para JSON Web Token (JWT)
 JWT_SECRET=tu_palabra_secreta_para_jwt
 
 # Configuración de Nodemailer (ej. para Gmail)
-EMAIL_USER=tu_correo@gmail.com
-EMAIL_PASS=tu_contraseña_de_aplicacion_de_google
+USERCORREO=tu_correo@gmail.com
+PASSCORREO=tu_contraseña_de_aplicacion_de_google
 
-### 4. Procedimientos almacenados en la base de datos
+### 4. Instalación Procedimientos almacenados en la base de datos
 Procedimiento obtenerDatosNotificacion (parametro p_reserva_id tipo INT):
 BEGIN
 	SELECT 
@@ -138,3 +137,6 @@ BEGIN
     GROUP BY r.reserva_id
     ORDER BY r.fecha_reserva;
 END
+
+
+Url para ver el Swagger: http://localhost:3000/api-docs/

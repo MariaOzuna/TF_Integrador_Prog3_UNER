@@ -15,8 +15,9 @@ export default class ServiciosControlador {
         datos: servicios,
       });
 
-      //captura el error de conexion a la bd o cualquier otro error
+      
     } catch (err) {
+      //captura el error de conexion a la bd o cualquier otro error
       console.log("Error en GET /servicios", err);
       res.status(500).json({
         estado: false,
@@ -127,7 +128,7 @@ export default class ServiciosControlador {
       mensaje: "Se eliminó al siguiente servicio.",
       servicio: dato,
       });
-      //apicache.clear();
+      
     } catch (error) {
       console.log("Error en DELETE /servicios/:servicio_id", error);
       res.status(500).json({
